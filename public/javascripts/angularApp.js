@@ -36,9 +36,9 @@ angular.module('Bit', ['ui.router'])
       case 0:
         return "No";
       case 1:
-        return "Maybe";
-      case 2:
         return "Yes";
+      case 2:
+        return "Maybe";
     }
 
     return "Yes";

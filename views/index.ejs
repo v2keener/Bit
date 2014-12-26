@@ -1,7 +1,21 @@
-<html>
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
   <head>
     <title>Bit Questionable App</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Following needs to be added still -->   
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <script src='https://cdn.firebase.com/js/client/2.0.4/firebase.js'></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js"></script>
     <script src="/javascripts/mersenne-twister.js"></script>
@@ -9,6 +23,9 @@
     <style> .glyphicon-thumbs-up { cursor:pointer } </style>
   </head>
   <body ng-app="Bit">
+    <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->   
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
         <ui-view></ui-view>
@@ -28,5 +45,180 @@
     <script type="text/ng-template" id="/questions.html">
       <div>{{question}}</div>
     </script>
+
+    <!-- /*** DIRECT COPY FROM old-bit index.html ***/ -->
+    <!--
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Bit: The questionable app</a>
+            </div>
+            <div class="navbar-collapse collapse">
+
+            </div>
+            
+        </div>
+    </div>
+
+    // Main jumbotron for a primary marketing message or call to action 
+    <div class="jumbotron">
+        <div class="container">
+            <h1>Welcome to Bit!</h1>
+            <p>Ask me a yes-or-no question:</p>
+            <p>
+                <textarea id="question" style="width: 90%; height:10ex;"></textarea>
+            </p>
+            <p><a id="getAnswer" class="btn btn-primary btn-lg" role="button">Get Answer</a>
+            </p>
+        </div>
+    </div>
+
+    <div class="container">
+        // Example row of columns 
+        <div class="row">
+            <div class="col-md-4" style="width:100%">
+                <h2>What you've asked so far:</h2>
+                <div id="answersContainer" style="border: 1px dotted; padding: 1ex; height:30ex; width:100%; overflow-y: scroll;">
+                  <p id="answers">APOLOGIES. THERE SEEMS TO HAVE BEEN AN ERROR OR JAVASCRIPT IS NOT ENABLED</p>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <footer>
+            <p>&copy; Keener Edge Consulting 2014</p>
+        </footer>
+    </div>
+    //container
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+    window.jQuery || document.write('<script src="js/vendor/jquery-2.1.1.min.js"><\/script>')
+    </script>
+
+    <script src="js/vendor/bootstrap.min.js"></script>
+
+    <script src="js/main.js"></script>
+
+    //Google Analytics: change UA-XXXXX-X to be your site's ID. 
+    <script>
+    /* (function(b, o, i, l, e, r) {
+        b.GoogleAnalyticsObject = l;
+        b[l] || (b[l] =
+            function() {
+                (b[l].q = b[l].q || []).push(arguments)
+            });
+        b[l].l = +new Date;
+        e = o.createElement(i);
+        r = o.getElementsByTagName(i)[0];
+        e.src = 'http://www.google-analytics.com/analytics.js';
+        r.parentNode.insertBefore(e, r)
+    }(window, document, 'script', 'ga'));
+    ga('create', 'UA-XXXXX-X');
+    ga('send', 'pageview'); */
+    </script>
+
+    <script>
+    (function() { // Anonymous namespace
+
+        var defaultText = "Nothing yet!", isBitActivated = false;
+        // Init random number generator superior to most browsers JavaScript VM implementation
+        var rand = new MersenneTwister();
+
+        var scrollToAnswer = function(){
+          var answerTop = $('#answersContainer p#answers p:last').offset().top;
+          /*var containerTop = $('#answersContainer').offset().top;*/
+          var scrollTop = answerTop; /* This *was* a calculated value--now it's just overscrolling to bottom */
+          $('#answersContainer').scrollTop(scrollTop);
+        };
+
+        var getQuestion = function() {
+            var sanitized = $('<a></a>').text($('#question').val()).html();
+            return sanitized;
+        };
+
+        var getAnswer = function() {
+            var answer;
+            var intAnswer = rand.genrand_int32() % 3;
+
+            switch (intAnswer) {
+                case 0:
+                    answer = "No";
+                    break;
+                case 1:
+                    answer = "Yes";
+                    break;
+                case 2:
+                    answer = "Maybe";
+                    break;
+                default:
+                    answer = "ERROR";
+            }
+
+            return answer;
+        };
+
+        var printResponse = function() {
+            $('#answers').append("<p>Q: " + getQuestion() + "<br>A: " + getAnswer() + "</p>");
+        };
+
+        var clearQuestion = function() {
+            $('#question').val('');
+        };
+
+        /*
+          Add one extra "link" for browser Back buttton
+        */
+        var addHash = function(){
+          if(!window.location.hash){
+            window.location.hash = "bitIsActivated"; 
+          }
+        };
+
+        /* MAIN */
+        $('#answers').html(defaultText);
+
+        /* EVENTS */
+        $('#question').keypress(function(e) {
+          var code = e.keyCode || e.which, 
+            enterKey = 13;
+          if (code === enterKey) { 
+            $('#getAnswer').trigger('click');
+            return false; /* Don't place a <br> in #question */
+          }
+        });
+
+        $('#getAnswer').click(function() {
+
+            /* If still default text, clear it out */
+            if ($('#answers').html() === defaultText) {
+                $('#answers').html('');
+            }
+
+            printResponse();
+            clearQuestion();
+            addHash();
+            scrollToAnswer();
+            isBitActivated = true;
+        });
+
+        /*
+        // Goal of this code was to try and catch user before leaving. This would be for if/when user can save Q and A results.
+
+        $(window).bind('beforeunload', function(e){ 
+          if(isBitActivated){
+            return alert('Sure you want to leave?');
+          }
+        });*/
+        /* END MAIN */
+    })();
+    </script>-->
+
   </body>
 </html>
