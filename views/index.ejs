@@ -26,29 +26,7 @@
     <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->   
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3">
-        <ui-view></ui-view>
-      </div>
-    </div>
-
-    
-    <script type="text/ng-template" id="/home.html">
-      <div ng-repeat="question in questions">
-        Q: {{question.question}} A: {{question.answer}}
-      </div>
-      <form ng-submit="addQuestion()">
-        <input type="text" ng-model="question" />
-        <button type="submit">Add question</button>
-      </form>
-    </script>
-    <script type="text/ng-template" id="/questions.html">
-      <div>{{question}}</div>
-    </script>
-
-    <!-- /*** DIRECT COPY FROM old-bit index.html ***/ -->
-    <!--
-        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -66,37 +44,50 @@
         </div>
     </div>
 
-    // Main jumbotron for a primary marketing message or call to action 
-    <div class="jumbotron">
+    <ui-view></ui-view>
+    
+    
+    <script type="text/ng-template" id="/home.html">
+      <div class="jumbotron">
         <div class="container">
-            <h1>Welcome to Bit!</h1>
+          <form ng-submit="addQuestion()">
+            <h1>Welcome to Bit! **replace with Hello {Name}**</h1>
             <p>Ask me a yes-or-no question:</p>
             <p>
-                <textarea id="question" style="width: 90%; height:10ex;"></textarea>
+                <textarea id="question" ng-model="question" style="width: 90%; height:10ex;"></textarea>
             </p>
-            <p><a id="getAnswer" class="btn btn-primary btn-lg" role="button">Get Answer</a>
+            <p>
+              <button type="submit" class="btn btn-primary btn-lg">Get Answer</button>
             </p>
+          </form>
         </div>
-    </div>
+      </div>
 
-    <div class="container">
-        // Example row of columns 
-        <div class="row">
-            <div class="col-md-4" style="width:100%">
-                <h2>What you've asked so far:</h2>
-                <div id="answersContainer" style="border: 1px dotted; padding: 1ex; height:30ex; width:100%; overflow-y: scroll;">
-                  <p id="answers">APOLOGIES. THERE SEEMS TO HAVE BEEN AN ERROR OR JAVASCRIPT IS NOT ENABLED</p>
-                </div>
-            </div>
-        </div>
+      <div class="container">
+          <div class="row">
+              <div class="col-md-4" style="width:100%">
+                  <h2>What you&#39;ve asked so far:</h2>
+                  <div id="answersContainer" style="border: 1px dotted; padding: 1ex; height:30ex; width:100%; overflow-y: scroll;">
+                    <p ng-repeat="question in questions">
+                      Q: {{question.question}} A: {{question.answer}}
+                    </p>
+                  </div>
+              </div>
+          </div>
 
-        <hr>
+          <hr>
 
-        <footer>
-            <p>&copy; Keener Edge Consulting 2014</p>
-        </footer>
-    </div>
-    //container
+          <footer>
+              <p>&copy; Keener Edge Consulting 2014</p>
+          </footer>
+      </div>
+    </script>
+
+    <!-- Following needs removed, as it's not used -->
+    <script type="text/ng-template" id="/questions.html">
+      <div>{{question}}</div>
+    </script>
+
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
     window.jQuery || document.write('<script src="js/vendor/jquery-2.1.1.min.js"><\/script>')
@@ -106,8 +97,8 @@
 
     <script src="js/main.js"></script>
 
-    //Google Analytics: change UA-XXXXX-X to be your site's ID. 
     <script>
+    //Google Analytics: change UA-XXXXX-X to be your site's ID.
     /* (function(b, o, i, l, e, r) {
         b.GoogleAnalyticsObject = l;
         b[l] || (b[l] =
@@ -122,7 +113,7 @@
     }(window, document, 'script', 'ga'));
     ga('create', 'UA-XXXXX-X');
     ga('send', 'pageview'); */
-    </script>
+    </script><!--
 
     <script>
     (function() { // Anonymous namespace
